@@ -13,7 +13,7 @@ const contactsList = [
 
 const App = () => {
   const [contacts, setContacts] = useState(() => {
-    const items = JSON.parse(localStorage.getItem("contacts"));
+    const items = JSON.parse(localStorage.getItem("contacts")) || [];
 
     if (items.length !== 0) return items;
 
