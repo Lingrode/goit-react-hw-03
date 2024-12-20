@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import style from "./App.module.css";
 import ContactList from "./components/ContactList/ContactList";
 import SearchBox from "./components/SearchBox/SearchBox";
@@ -12,12 +12,29 @@ const contactsList = [
 ];
 
 const App = () => {
-  const [contacts, setContacts] = useState(contactsList);
+  const [contacts, setContacts] = useState(() => {
+    const items = localStorage.getItem("contacts");
+
+    if (items) return JSON.parse(items);
+
+    return contactsList;
+  });
   const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("contacts", JSON.stringify(contacts));
+  }, [contacts]);
 
   const addContact = (newContact) => {
     setContacts((prev) => [...prev, newContact]);
     console.log(newContact);
+  };
+
+  const deleteContact = (id) => {
+    console.log(id);
+    setContacts((prev) => {
+      return prev.filter((item) => item.id !== id);
+    });
   };
 
   const filteredTasks = contacts.filter((item) =>
@@ -29,7 +46,7 @@ const App = () => {
       <h1>Phonebook</h1>
       <ContactForm onAdd={addContact} />
       <SearchBox value={filter} onFilter={setFilter} />
-      <ContactList contacts={filteredTasks} />
+      <ContactList contacts={filteredTasks} onDelete={deleteContact} />
     </div>
   );
 };
