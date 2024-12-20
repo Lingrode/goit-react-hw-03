@@ -13,9 +13,9 @@ const contactsList = [
 
 const App = () => {
   const [contacts, setContacts] = useState(() => {
-    const items = localStorage.getItem("contacts");
+    const items = JSON.parse(localStorage.getItem("contacts"));
 
-    if (items) return JSON.parse(items);
+    if (items.length !== 0) return items;
 
     return contactsList;
   });
@@ -43,7 +43,7 @@ const App = () => {
 
   return (
     <div className={style.container}>
-      <h1>Phonebook</h1>
+      <h1 className={style.header}>Phonebook</h1>
       <ContactForm onAdd={addContact} />
       <SearchBox value={filter} onFilter={setFilter} />
       <ContactList contacts={filteredTasks} onDelete={deleteContact} />
